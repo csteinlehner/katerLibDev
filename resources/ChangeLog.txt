@@ -1,0 +1,14 @@
+2010-04-12  Andreas Schlegel
+      * version 0.2.0
+      * the template now support both, processing libraries and tools
+      * added an install file for a library/tool distribution included in the .zip file.
+      * data: adding data folder, see README file for details
+      * lib: adding lib folder, see README file for details
+      * resources: excludiding project related properties from build.xml, now located inside build.properties
+      * distribution: distributions are now archived with version number
+      * bin: removed
+      * build.xml: ant build file has been mostly rewritten, now supports tool and library 
+      * build.properties: adding properties file for build.xml. please read comments inside build.properties.
+      * changeLog: adding ChangeLog file
+      
+     
