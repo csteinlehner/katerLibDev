@@ -1,5 +1,6 @@
 import katerlib.*;
 import TUIO.*;
+import proxml.*;
 
 KaterKontrol katerkontrol;
 TuioProcessing tuioClient;
@@ -7,6 +8,7 @@ int[] katerIDs = {8,9};
 
 void setup() {
   size(800,600);
+  println(sketchFile("config.properties").canRead());
   tuioClient= new TuioProcessing(this);
   katerkontrol = new KaterKontrol(this, tuioClient, katerIDs);
   katerkontrol.KaterIdGoTo(8,400,300);
