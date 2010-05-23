@@ -14,8 +14,8 @@ void setup() {
 
 void draw() {
   background(125);
-  katerkontrol.pre();
-  katerkontrol.draw();
+ katerkontrol.pre();
+katerkontrol.draw();
 }
 
 // these callback methods are called whenever a TUIO event occurs
@@ -50,6 +50,16 @@ void updateTuioCursor (TuioCursor tcur) {
 // called when a cursor is removed from the scene
 void removeTuioCursor(TuioCursor tcur) {
   println("remove cursor "+tcur.getCursorID()+" ("+tcur.getSessionID()+")");
+}
+
+// called when a Kater has started
+void katerStarted(Kater k){
+  println("Kater with id "+k+" has started");
+}
+
+// called when a Kater has finished
+void katerFinished(Kater k){
+  println("Kater with id "+k+" has finished");
 }
 
 // called after each message bundle

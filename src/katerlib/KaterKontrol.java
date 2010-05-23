@@ -28,6 +28,7 @@ package katerlib;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -37,14 +38,14 @@ import processing.core.*;
 
 /**
  * 
- * @example KaterExample 
+ * @example Kater
  * 
  * (the tag @example followed by the name of an example included in folder 'examples' will
  * automatically include the example in the javadoc.)
  *
  */
 
-public class KaterKontrol {
+public class KaterKontrol implements IKaterEventListener{
 	
 	
 	/*
@@ -61,40 +62,70 @@ public class KaterKontrol {
 	private int angleOffset = 90;
 	private int innerRadius = 90;
 	
-	// properties for configuration
+	// Java-properties for configuration
 	private Properties config = new Properties();
 	
 	// myParent is a reference to the parent sketch
 	private PApplet myParent;
+	
 	// tuioClient is a reference to the tuioClient in the parent sketch
 	private TuioProcessing tuio;
-
+	
+	// Array of Fiducial IDs
     private int[] katerIds;
+    
+    // Arrays for the Kater-Management
     private Vector<Kater> katerList = new Vector<Kater>();
     private Vector<Kater> activeKater = new Vector<Kater>();
     
+    
+    // Methods for EventSystem
+    Method katerStarted;
+    Method katerFinished;
+    
+    // Version of the Library
 	public final static String VERSION = "v0.1";
 
 	/**
-	 * a Constructor, usually called in the setup() method in your sketch to
-	 * initialize and start the library.
+	 * The KaterKontrol Constructor which needs a Reference to PApplet, TUIO and an array with Fiducial IDs 
 	 * 
 	 * @example KaterExample
-	 * @param theParent
-	 * @param tuioClient
-	 * @param katerTuioIds
+	 * @param theParent	Reference to the PApplet (usually this)
+	 * @param tuioClient Reference to the TUIOProcessing Client
+	 * @param katerTuioIds	An Array of ints with the Fiducial IDs
 	 * 
 	 */
 	public KaterKontrol(PApplet theParent, TuioProcessing tuioClient, int[] katerTuioIds) {
 		myParent = theParent;
 		this.tuio = tuioClient;
 		this.katerIds=katerTuioIds;
-		
+		myParent.registerDispose(this);
+		checkImplementations();
 		readConfig();
 	
 		createKater();
 	}
-	
+	/**
+	 * 
+	 * Checks if the EventDispatch Methods are implemented
+	 */
+	private void checkImplementations(){
+		try {
+		      katerFinished = myParent.getClass().getMethod("katerFinished",new Class[] { Kater.class } );
+		    } catch (Exception e) {
+		    	System.err.println("KaterLib: katerFinished Method ('katerFinished(Kater k)') isn't properly implemented");
+		    }
+			try {
+			      katerStarted = myParent.getClass().getMethod("katerStarted",new Class[] { Kater.class } );
+			    } catch (Exception e) {
+			    	System.err.println("KaterLib: katerStarted Method ('katerStarted(Kater k)') isn't properly implemented");
+			    } 
+		
+	}
+	/**
+	 * Reads the config.properties from the data folder or creates one if there isn't any
+	 * 
+	 */
 	private void readConfig(){
 		// load config into Input else create file
 		InputStream configInput;
@@ -136,17 +167,6 @@ public class KaterKontrol {
                 System.err.println("KaterLib: There is something wrong with your config file, please fix it!");
              }
 	}
-	public void setConfig(int cursorsize, int objectsize, int sensorradius, int sensorspotsize, int angleblur, int distanceblur, int xoffset,int yoffset, int angleOffset){
-		this.cursorsize = cursorsize;
-		this.objectsize = objectsize;
-		this.sensorradius = sensorradius;
-		this.sensorspotsize = sensorspotsize;
-		this.angleblur = angleblur;
-		this.distanceblur = distanceblur;
-		this.xoffset = xoffset;
-		this.yoffset = yoffset;
-		this.angleOffset = angleOffset;
-	}
 	/**
 	 * create the Kater Objects
 	 */
@@ -186,19 +206,31 @@ public class KaterKontrol {
 	/**
 	 * send a Kater by its Object to a Coordinate
 	 * 
-	 * @param kater
-	 * @param theX
-	 * @param theY
+	 * @param kater	Reference to the Kater Object
+	 * @param theX	X Coordinate
+	 * @param theY	Y Coordinate
 	 */
 	public void KaterGoTo(Kater kater, float theX, float theY){
 	    kater.goTo(theX, theY);
 	    activeKater.add(kater);
 	}
-	
+	/**
+	 * send a Kater by its Fiducial ID to a Coordinate
+	 * 
+	 * @param katerId	Fiducial ID of the Kater
+	 * @param theX	X Coordinate
+	 * @param theY	Y Coordinate
+	 */
 	public void KaterIdGoTo(int katerId, float theX, float theY){
 		getKaterById(katerId).goTo(theX, theY);
 	}
-	
+	/**
+	 * 
+	 * Returns a Kater Object by its Fiducial ID
+	 * 
+	 * @param katerId Fiducial ID of the Kater 
+	 * @return	the Kater Object
+	 */
 	public Kater getKaterById(int katerId){
 		for (int i = 0; i < katerList.size(); i++) {
 			if(katerList.get(i).getID()==katerId){
@@ -209,13 +241,29 @@ public class KaterKontrol {
 		return null;
 	}
 	
+
+	public void onActionStateChange(IKaterEventDispatcher dispatcher,
+			EKaterEventState theState) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	/**
 	 * return the version of the library.
 	 * 
-	 * @return String
+	 * @return String Version of the Library
 	 */
 	public static String version() {
 		return VERSION;
 	}
-
+	/**
+	 * 
+	 *  Should only called by Processing. Empties the Vectors and connection to Processing and TUIO
+	 */
+	public void dispose(){
+		katerList=null;
+		activeKater=null;
+		tuio=null;
+		myParent=null;
+	}
 }

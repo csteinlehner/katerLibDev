@@ -44,7 +44,7 @@ public class Kater implements IKaterEventDispatcher{
      * @param katerkontrol
      * @param theID
      */
-    Kater(PApplet p, TuioProcessing tuio, int theID) {
+   public Kater(PApplet p, TuioProcessing tuio, int theID) {
 		myID = theID;
 		System.out.println("KaterLib: Kater No. "+myID+" created!");
 		this.p=p;
@@ -199,32 +199,32 @@ public class Kater implements IKaterEventDispatcher{
      * 
      * @return the X Coordinate
      */
-    float getX(){return myX;}
+    public float getX(){return myX;}
     /**
      * 
      * @return the Y Coordinate
      */
-    float getY(){return myY;}
+    public float getY(){return myY;}
     /**
      * 
      * @return the Center X
      */
-    float getCenterX(){return (myX+myXoffset);}
+    public float getCenterX(){return (myX+myXoffset);}
     /**
      * 
      * @return the Center Y
      */
-    float getCenterY(){return (myY+myYoffset);}
+    public float getCenterY(){return (myY+myYoffset);}
     /**
      * 
      * @return the TUIO ID
      */
-    int getID(){return myID;}
+    public int getID(){return myID;}
     /**
      * set the running state to true
      * 
      */
-    void startrun(){running=true;}
+    public void startrun(){running=true;}
     /**
      * 
      * set the running state to false and dispatch the finish event
