@@ -1,3 +1,3 @@
 package katerlib;
 
-public enum EKaterEventState {finished}
+public enum EKaterEventState {finished, started}

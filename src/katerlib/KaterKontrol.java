@@ -22,7 +22,6 @@
  * @modified	##date##
  * @version		##version##
  */
-
 package katerlib;
 
 import java.io.InputStream;
@@ -99,6 +98,8 @@ public class KaterKontrol implements IKaterEventListener{
 		this.tuio = tuioClient;
 		this.katerIds=katerTuioIds;
 		myParent.registerDispose(this);
+		myParent.registerDraw(this);
+		myParent.registerPre(this);
 		checkImplementations();
 		readConfig();
 	
@@ -110,11 +111,13 @@ public class KaterKontrol implements IKaterEventListener{
 	 */
 	private void checkImplementations(){
 		try {
+			System.out.println("katerfinished found");
 		      katerFinished = myParent.getClass().getMethod("katerFinished",new Class[] { Kater.class } );
 		    } catch (Exception e) {
 		    	System.err.println("KaterLib: katerFinished Method ('katerFinished(Kater k)') isn't properly implemented");
 		    }
-			try {
+		try {
+				System.out.println("katerStarted found");
 			      katerStarted = myParent.getClass().getMethod("katerStarted",new Class[] { Kater.class } );
 			    } catch (Exception e) {
 			    	System.err.println("KaterLib: katerStarted Method ('katerStarted(Kater k)') isn't properly implemented");
@@ -242,7 +245,26 @@ public class KaterKontrol implements IKaterEventListener{
 	
 
 	public void onActionStateChange(IKaterEventDispatcher dispatcher, EKaterEventState theState) {
-		// TODO Auto-generated method stub
+		switch (theState) {
+		case finished:
+			try {
+				katerFinished.invoke(myParent, new Object[] { this });
+			    } catch (Exception e) {
+			      System.err.println("Disabling katerFinished() because of an error.");
+			      e.printStackTrace();
+			      katerFinished = null;}
+			break;
+		case started:
+			try {
+				katerStarted.invoke(myParent, new Object[] { this });
+			    } catch (Exception e) {
+			      System.err.println("Disabling katerStarted() because of an error.");
+			      e.printStackTrace();
+			      katerStarted = null;}
+			break;
+		default:
+			break;
+		}
 		
 	}
 	
@@ -256,7 +278,7 @@ public class KaterKontrol implements IKaterEventListener{
 	}
 	/**
 	 * 
-	 *  Should only called by Processing. Empties the Vectors and connection to Processing and TUIO
+	 *  Should only called by Processing. Empties the Vectors and end connections to Processing and TUIO
 	 */
 	public void dispose(){
 		katerList=null;
