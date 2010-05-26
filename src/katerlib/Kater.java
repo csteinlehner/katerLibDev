@@ -253,7 +253,7 @@ public class Kater implements IKaterEventDispatcher{
      * @return the TuioObject of the Kater
      */
     TuioObject getTobj(){
-    	 Vector tuioObjectList = tuio.getTuioObjects();
+    	 Vector<TuioObject> tuioObjectList = tuio.getTuioObjects();
     	    for (int i = 0; i < tuioObjectList.size(); i++) {
     	        TuioObject tobj = (TuioObject) tuioObjectList.elementAt(i);
     	        if(tobj.getSymbolID()==myID){

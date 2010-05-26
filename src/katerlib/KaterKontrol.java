@@ -25,7 +25,6 @@
 
 package katerlib;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
@@ -242,8 +241,7 @@ public class KaterKontrol implements IKaterEventListener{
 	}
 	
 
-	public void onActionStateChange(IKaterEventDispatcher dispatcher,
-			EKaterEventState theState) {
+	public void onActionStateChange(IKaterEventDispatcher dispatcher, EKaterEventState theState) {
 		// TODO Auto-generated method stub
 		
 	}
