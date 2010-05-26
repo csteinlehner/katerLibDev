@@ -53,12 +53,12 @@ void removeTuioCursor(TuioCursor tcur) {
 }
 
 // called when a Kater has started
-void katerStarted(Kater k){
+void katerStarted( Kater k ){
   println("Kater with id "+k+" has started");
 }
 
 // called when a Kater has finished
-void katerFinished(Kater k){
+void katerFinished( Kater k ){
   println("Kater with id "+k+" has finished");
 }
 
