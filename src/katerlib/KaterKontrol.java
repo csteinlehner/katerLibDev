@@ -84,7 +84,7 @@ public class KaterKontrol implements IKaterEventListener{
     Method katerFinished;
     
     // Version of the Library
-	public final static String VERSION = "v0.1";
+	public final static String VERSION = "##version##";
 
 	/**
 	 * The KaterKontrol Constructor which needs a Reference to PApplet, TUIO and an array with Fiducial IDs 
