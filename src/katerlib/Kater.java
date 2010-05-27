@@ -40,9 +40,9 @@ public class Kater implements IKaterEventDispatcher{
     /**
      * The single Kater object has to be created with a reference to the PApplet, the Tuio and the referencing tuioID
      * 
-     * @param p
-     * @param katerkontrol
-     * @param theID
+     * @param p The processing PApplet
+     * @param tuio The TUIO Processing Client
+     * @param theID	The TUIO ID of the Kater
      */
    public Kater(PApplet p, TuioProcessing tuio, int theID) {
 		myID = theID;

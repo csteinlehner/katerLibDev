@@ -1,3 +1,5 @@
+
+
 /**
  * This is the Control Library for the Kater Project
  *
@@ -22,6 +24,7 @@
  * @modified	##date##
  * @version		##version##
  */
+
 package katerlib;
 
 import java.io.InputStream;
@@ -36,7 +39,7 @@ import processing.core.*;
 
 /**
  * 
- * @example Kater
+ * @example KaterExample
  * 
  * (the tag @example followed by the name of an example included in folder 'examples' will
  * automatically include the example in the javadoc.)
@@ -110,18 +113,37 @@ public class KaterKontrol implements IKaterEventListener{
 	 * Checks if the EventDispatch Methods are implemented
 	 */
 	private void checkImplementations(){
-		try {
-			System.out.println("katerfinished found");
-		      katerFinished = myParent.getClass().getMethod("katerFinished",new Class[] { Kater.class } );
-		    } catch (Exception e) {
-		    	System.err.println("KaterLib: katerFinished Method ('katerFinished(Kater k)') isn't properly implemented");
-		    }
-		try {
-				System.out.println("katerStarted found");
-			      katerStarted = myParent.getClass().getMethod("katerStarted",new Class[] { Kater.class } );
-			    } catch (Exception e) {
-			    	System.err.println("KaterLib: katerStarted Method ('katerStarted(Kater k)') isn't properly implemented");
-			    } 
+//		try {
+//			System.out.println("katerfinished found");
+//		      katerFinished = myParent.getClass().getMethod("katerFinished",new Class[] { Kater.class } );
+//		    } catch (Exception e) {
+//		    	System.err.println("kater lib: katerFinished Method ('katerFinished(Kater k)') isn't properly implemented");
+//		    }
+//		try {
+//				System.out.println("katerStarted found");
+//			      katerStarted = myParent.getClass().getMethod("katerStarted",new Class[] { Kater.class } );
+//			    } catch (Exception e) {
+//			    	System.err.println("kater lib: katerStarted Method ('katerStarted(Kater k)') isn't properly implemented");
+//			    }
+//			    
+		
+		// FIXME Callback doesn't work right 
+			    try { 
+			    	katerFinished = myParent.getClass().getMethod("katerFinished", new Class[] { Kater.class }); 
+			    	System.out.println("katerFinished implemented");
+			    }
+			     	catch (Exception e) {
+			     		System.err.println("kater lib: katerFinished Method ('katerFinished(Kater k)') isn't properly implemented");
+			     		katerFinished = null;
+			     		}
+			    try { 
+				   	katerStarted = myParent.getClass().getMethod("katerStarted", new Class[] { Kater.class }); 
+				   	System.out.println("katerStarted implemented");
+			    	}
+			    	catch (Exception e) {
+			    		System.err.println("kater lib: katerStarted Method ('katerStarted(Kater k)') isn't properly implemented");
+			    		katerStarted = null;
+		     			}
 		
 	}
 	/**
@@ -135,7 +157,7 @@ public class KaterKontrol implements IKaterEventListener{
 			configInput = myParent.createInput("config.properties");
 		}
 		else{
-			  System.err.println("KaterLib: Config File can't be found, so I create one.");
+			  System.err.println("kater lib: Config File can't be found, so I create one.");
 			  PrintWriter output = myParent.createWriter("data/config.properties");
 			  output.println("cursorsize = "+cursorsize);
 			  output.println("objectsize = "+objectsize);
@@ -166,17 +188,18 @@ public class KaterKontrol implements IKaterEventListener{
             innerRadius = Integer.parseInt(config.getProperty("innerRadius"));
              }catch(Exception e)
              {
-                System.err.println("KaterLib: There is something wrong with your config file, please fix it!");
+                System.err.println("kater lib: There is something wrong with your config file, please fix it!");
              }
 	}
 	/**
-	 * create the Kater Objects
+	 * create the initial Kater Objects
 	 */
 	private void createKater(){
 		 for (int i=0; i<katerIds.length;i++){
 			 Kater tKater = new Kater(myParent, tuio, katerIds[i]);
-			 katerList.add(tKater);
 			 tKater.setValues(sensorradius, sensorspotsize, angleblur, distanceblur, xoffset, yoffset, angleOffset, innerRadius);
+			 tKater.addActionListener(this);
+			 katerList.add(tKater);
 		    }
 	}
 	
